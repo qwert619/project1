@@ -2,8 +2,8 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
 import "./App.css";
 import { Home } from "./pages/home";
-import { location } from "./pages/location";
-
+import { Location } from "./pages/location";
+import { Settings } from "./pages/settings";
 
 
 import { Navbar } from "./components/navbar";

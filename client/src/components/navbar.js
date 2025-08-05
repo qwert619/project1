@@ -5,6 +5,7 @@ export const Navbar = () => {
     const navigate = useNavigate();
     
 
+    
     return ( 
         <div className="navbar">
             <div className="navbar-container">

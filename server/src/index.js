@@ -1,13 +1,36 @@
-import express from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import path from "path";
+
+// Configure dotenv
+dotenv.config();
+
+//import { userRouter } from "./routes/users.js";
+//import { recipesRouter } from "./routes/recipes.js";
 
 const app = express();
+const PORT = process.env.PORT;
+const MONGODB_URI = process.env.MONGODB_URI;
 
+const __dirname = path.resolve();
 
-app.use(cors());
+const allowedOrigins = [
+  "https://bakerypage.onrender.com", // your frontend URL
+  "http://localhost:3000"            // for local development
+];
+
 app.use(express.json());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 
+app.use("/lobby", userRouter);
+app.use("/users", userRouter);
+app.get("/healthz", (req, res) => res.send("OK"));
 
-app.connect(3002, console.log('Server is running on port 3002'));
+mongoose.connect(MONGODB_URI)
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`))

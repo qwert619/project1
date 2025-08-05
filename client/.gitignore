@@ -24,3 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 
 public/datebite.png
+public/datebitemap.png
+public/datebitesetting.png

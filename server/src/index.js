@@ -28,6 +28,7 @@ app.use(cors({
 }));
 
 app.use("/lobby", userRouter);
+app.use("/users", userRouter);
 app.get("/healthz", (req, res) => res.send("OK"));
 
 mongoose.connect(MONGODB_URI)

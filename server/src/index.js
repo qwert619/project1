@@ -7,7 +7,7 @@ import path from "path";
 // Configure dotenv
 dotenv.config();
 
-//import { userRouter } from "./routes/users.js";
+import { userRouter } from "./routes/users.js";
 //import { recipesRouter } from "./routes/recipes.js";
 
 const app = express();
@@ -27,7 +27,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use("/lobby", userRouter);
+//app.use("/lobby", userRouter);
 app.use("/users", userRouter);
 app.get("/healthz", (req, res) => res.send("OK"));
 

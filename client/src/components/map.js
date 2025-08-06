@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
-
+import React, { useRef, useEffect, useCallback, useState, use } from "react";
+import axios from "axios";
 import { GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 
 const mapStyles = {
@@ -17,7 +17,7 @@ const mapStyles = {
 
 export const Map = () => {
 
-    
+    const userID = window.localStorage.getItem("userID");
     const [places, setPlaces] = useState([]);
     const [center, setCenter] = useState(null);
     const autocompleteRef = useRef(null);
@@ -25,10 +25,19 @@ export const Map = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        places.forEach(place => {
-            console.log("Place:", place.displayName);
-        });
+        console.log("Saving places:", places);
+        try {
+            
+            console.log("User ID:", userID);
+            console.log("Places to save:", places);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/location`, { places, userID });
+            console.log(response.data);
+        }catch (error) {
+            console.error("Error saving places:", error);
+
+        }
     }
+    
 
     useEffect(() => {
         if (navigator.geolocation) {
@@ -96,6 +105,7 @@ export const Map = () => {
         console.log('Map loaded successfully!');
         mapRef.current = mapInstance;
         getPlaces();
+        
     }, [getPlaces]);
 
 

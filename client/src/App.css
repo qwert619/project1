@@ -1,18 +1,28 @@
+:root {
+  --primary-orange: #FD7902;
+  --navbar-black: black;
+  --text-white: white;
+  --hover-gray: #333;
+}
+
 *{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   color: white;
+  font-family:   'Open Sans Condensed','Roboto Condensed' ,'Fjalla One','Oswald';
+  font-stretch: condensed;
+  font-weight: 10;
 }
 
 body{
-  background-color: black;
+  background-color: var(--primary-orange);
   width: auto;
   height: 100vh;
   margin: 0;
   padding: 0;
   align-items: center;
-  padding-top: 80px;
+  padding-bottom: 120px;
 }
 
 .App {
@@ -26,18 +36,18 @@ body{
 
 .navbar {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #1a1a1a;
-  border-bottom: 2px solid #333;
+  background-color: black;
+  border-top: 2px solid #333;
   z-index: 1000;
-  padding: 10px 0;
+  padding: 20px 0;
 }
 
 .navbar-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
@@ -46,17 +56,22 @@ body{
 
 .location-link,
 .settings-link {
-  font-size: 60px;
   text-decoration: none;
   color: white;
-  padding: 10px;
+  padding: 8px;
   border-radius: 8px;
   transition: background-color 0.3s ease, transform 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+}
+
+.location-link img,
+.settings-link img {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
 }
 
 .location-link:hover,
@@ -72,10 +87,44 @@ body{
 }
 
 .logo-link img {
+  width: 80px;
+  height: 80px;
   border-radius: 8px;
   transition: transform 0.3s ease;
 }
 
 .logo-link img:hover {
   transform: scale(1.05);
+}
+
+.global-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-container h1{
+  font-family:   'Roboto Condensed', 'Open Sans Condensed','Fjalla One','Oswald';
+  font-weight: 10;
+  color: var(--text-white); /* Bright cyan */
+  letter-spacing: 2px;
+  font-style: italic; /* adds slight wave/slant */
+  font-stretch: condensed;
+}
+
+.map-container {
+  position: relative;
+  margin: 0 auto; /* Centers the map */
+}
+
+.search-button {
+
 }

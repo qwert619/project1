@@ -1,12 +1,11 @@
 
 
-
-
-export const Location = () => {
-  return (
-    <div className="location">
-      <h1>Location</h1>
-    </div>
-  );
+export const Location = ({children}) => {
+    // Get user location only once when component mounts
+    return (
+        <div className="location">
+            {children}
+        </div>
+    );
 };
 

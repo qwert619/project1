@@ -37,7 +37,7 @@ userRouter.put("/", async (req, res) => {
 
 userRouter.put("/location", async (req, res) => {
     try {
-        
+
         const userID = req.body.userID;
         const guestplaces = req.body.places;
         const setplaces = await userModel.findByIdAndUpdate(
@@ -46,6 +46,20 @@ userRouter.put("/location", async (req, res) => {
         res.json({setplaces});
     } catch (error) {
         console.error("Error updating user places:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+userRouter.get("/location/:userID", async (req, res) => {
+
+    try{
+        const userID = req.params.userID;
+        const user = await userModel.findById(userID);
+        if (!user) {
+            return res.status(404).json({ message: `User not found ${userID}` });
+        }
+        res.json({ guestplaces: user.guestplaces || []});
+    } catch (error) {
+        console.error("Error fetching user locations:", error);
         res.status(500).send("Internal Server Error");
     }
 });

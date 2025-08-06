@@ -9,6 +9,7 @@ import { Map } from "./components/map";
 import { LoadScript } from "@react-google-maps/api";
 import { Navbar } from "./components/navbar";
 
+
 const libraries = ['places'];
 
 function App() {

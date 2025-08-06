@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import { SwipeGame } from "../components/swipegame";
 
 export const Home = () => {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState();
     const navigate = useNavigate();
     const [guestusername, setGuestUsername] = useState("");
 
@@ -11,9 +12,7 @@ export const Home = () => {
         const userID = window.localStorage.getItem("userID");
         const fetchValidUser = async () => {
             try{
-                console.log("Fetching valid user with ID:", userID);
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userID}`);
-                console.log("Valid user fetched:", response.data.validUser);
                 if (response.data.validUser) {
                     setLoggedIn(true);
                 } else {
@@ -52,12 +51,11 @@ export const Home = () => {
         makeguest();
   };
 
-
   return (
     <div className="home">
         {loggedIn ? (
         <>
-        <h1 className="loading">Loading restaurants...</h1>
+        <SwipeGame />
         </>
         ) : (
             <>

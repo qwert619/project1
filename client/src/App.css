@@ -214,3 +214,128 @@ body{
   background-color: #e66a02;
   transform: scale(1.05);
 }
+
+/* =========================
+   SWIPE GAME
+   ========================= */
+
+.swipe-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 20px;
+  gap: 30px;
+}
+
+.swipe-data-title {
+  font-size: 32px;
+  color: var(--text-white);
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.swipe-buttons-container {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.swipe-data-no,
+.swipe-data-yes {
+  padding: 20px 30px;
+  border-radius: 50px;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.swipe-data-no {
+  background-color: #dc3545;
+  color: white;
+}
+
+.swipe-data-no:hover {
+  background-color: #c82333;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+}
+
+.swipe-data-yes {
+  background-color: #28a745;
+  color: white;
+}
+
+.swipe-data-yes:hover {
+  background-color: #218838;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.swipe-data-no:active,
+.swipe-data-yes:active {
+  transform: scale(0.95);
+}
+
+.swipe-progress {
+  font-size: 16px;
+  color: var(--text-white);
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+.swipe-card {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.loading-swipe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  color: var(--text-white);
+  font-size: 18px;
+}
+
+.no-restaurants {
+  text-align: center;
+  color: var(--text-white);
+  font-size: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  border-radius: 15px;
+  max-width: 400px;
+}
+
+.no-restaurants h2 {
+  margin-bottom: 15px;
+  color: var(--text-white);
+}
+
+.no-restaurants p {
+  color: rgba(255, 255, 255, 0.8);
+}

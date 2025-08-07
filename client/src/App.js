@@ -5,7 +5,7 @@ import { Home } from "./pages/home";
 import { Location } from "./pages/location";
 import { Settings } from "./pages/settings";
 import { Title } from "./components/title";
-import { Map } from "./components/map";
+import {MapComponent} from "./components/map";
 import { LoadScript } from "@react-google-maps/api";
 import { Navbar } from "./components/navbar";
 
@@ -22,7 +22,7 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
-            <Route path="/location" element={<Location><Map /></Location>} />
+            <Route path="/location" element={<Location><MapComponent /></Location>} />
             <Route path="/settings" element={<Settings />} />
             </Routes> 
         </Router>

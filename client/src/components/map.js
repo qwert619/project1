@@ -15,9 +15,10 @@ const mapStyles = {
 
 
 
-export const Map = () => {
+export const MapComponent = () => {
 
     const userID = window.localStorage.getItem("userID");
+    const [loading, setLoading] = useState(false);
     const [places, setPlaces] = useState([]);
     const [center, setCenter] = useState(null);
     const autocompleteRef = useRef(null);
@@ -61,36 +62,80 @@ export const Map = () => {
     }, []);
 
 
-    const getPlaces = useCallback(async () => {
-        if (!window.google || !window.google.maps || !window.google.maps.importLibrary) {
-            console.log('Google Maps not loaded yet');
-            return;
-        }
+const getPlaces = useCallback(async () => {
+    setLoading(true);
+  if (!window.google || !window.google.maps || !window.google.maps.importLibrary) {
+    console.log('Google Maps not loaded yet');
+    return;
+  }
 
-        if (!center) {
-            console.log('No center location');
-            return;
-        }
+  if (!center) {
+    console.log('No center location');
+    return;
+  }
 
-        try {
-            const { Place } = await window.google.maps.importLibrary("places");
-            
-            const request = {
-                fields: ['displayName', 'location', 'businessStatus'],
-                locationRestriction: {
-                    center: center,
-                    radius: 3000,
-                },
-                includedTypes: ['restaurant']
-            };
+  try {
+    const { Place } = await window.google.maps.importLibrary("places");
 
-            const { places: foundPlaces } = await Place.searchNearby(request);
-            setPlaces(foundPlaces || []);
-            
-        } catch (error) {
-            console.error('Error with Places API:', error);
+    const radius = 1500;
+    const offsetMeters = 1200;
+    const offsetLat = offsetMeters / 111320;
+    const offsetLng = offsetMeters / (111320 * Math.cos(center.lat * (Math.PI / 180)));
+
+    const offsets = [
+      { lat: 0, lng: 0 },
+      { lat: offsetLat, lng: 0 },
+      { lat: -offsetLat, lng: 0 },
+      { lat: 0, lng: offsetLng },
+      { lat: 0, lng: -offsetLng },
+      { lat: offsetLat, lng: offsetLng },
+      { lat: offsetLat, lng: -offsetLng },
+      { lat: -offsetLat, lng: offsetLng },
+      { lat: -offsetLat, lng: -offsetLng },
+    ];
+
+    const allPlacesMap = new Map();
+
+    for (const offset of offsets) {
+      const tileCenter = {
+        lat: center.lat + offset.lat,
+        lng: center.lng + offset.lng,
+      };
+
+      const request = {
+        fields: ['displayName', 'location', 'businessStatus'],
+        locationRestriction: {
+          center: tileCenter,
+          radius: radius,
+        },
+        includedTypes: ['restaurant'],
+        // omit fields to get all default info
+      };
+
+      const { places: tilePlaces } = await Place.searchNearby(request);
+
+      if (tilePlaces && tilePlaces.length) {
+        for (const place of tilePlaces) {
+          // Use a unique key - try 'id' or fallback to displayName+coords
+          const uniqueKey = place.id ?? `${place.displayName}-${place.location.lat}-${place.location.lng}`;
+
+          if (!allPlacesMap.has(uniqueKey)) {
+            allPlacesMap.set(uniqueKey, place);
+          }
         }
-    }, [center]);
+      }
+
+      await new Promise(res => setTimeout(res, 200));
+    }
+
+    setPlaces(Array.from(allPlacesMap.values()));
+  } catch (error) {
+    console.error('Error with Places API:', error);
+  } finally {
+    setLoading(false);
+  }
+}, [center]);
+
 
     const onPlaceChanged = async () => {
         const place = autocompleteRef.current.getPlace();
@@ -166,9 +211,8 @@ export const Map = () => {
                                 }}
                             />
                         </Autocomplete>
-                        
-                        {(
                             <button 
+                                disabled={loading}
                                 className="search-button" 
                                 onClick={handleSubmit}
                                 style={{
@@ -181,18 +225,17 @@ export const Map = () => {
                                     borderRadius: "5px",
                                     cursor: "pointer",
                                     height: "40px",
-                                    width: "100px",
+                                    width: "120px",
                                     zIndex: "10",
                                     fontWeight: "bold"
                                 }}
                             >
-                                Save ({places.length})
+                                {loading ? "Loading..." : `Save Restaurants`}
                             </button>
-                        )}
                     </div>
                 </GoogleMap>
         </div>
     );
 };
 
-export default Map;
+export default MapComponent;

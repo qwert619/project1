@@ -17,6 +17,7 @@ export const Settings = () => {
                 console.log("Valid user fetched:", response.data.validUser);
                 if (response.data.validUser) {
                     setLoggedIn(true);
+                    setCurrentUsername(window.localStorage.getItem("username"));
                 } else {
                     window.localStorage.removeItem("userID");
                 }

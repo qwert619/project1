@@ -1,5 +1,5 @@
 :root {
-  --primary-orange: #FD7902;
+  --primary-orange: #FF9722;
   --navbar-black: black;
   --text-white: white;
   --hover-gray: #333;
@@ -16,7 +16,7 @@
 }
 
 body{
-  background-color: var(--primary-orange);
+  background-color: var(--navbar-black);
   width: auto;
   height: 100vh;
   margin: 0;
@@ -39,8 +39,8 @@ body{
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: black;
-  border-top: 2px solid #333;
+  background-color: var(--primary-orange);
+  border-top: 2px solid var(--primary-orange);
   z-index: 1000;
   padding: 20px 0;
 }
@@ -76,7 +76,7 @@ body{
 
 .location-link:hover,
 .settings-link:hover {
-  background-color: #333;
+  background-color: #ffb056;
   transform: scale(1.05);
 }
 

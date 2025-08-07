@@ -10,13 +10,13 @@ export const Navbar = () => {
         <div className="navbar">
             <div className="navbar-container">
             <Link to = "/location" className="location-link">
-                <img src="/datebitemap.png" alt="Location" />
+                <img src="/datebitemap-orange.png" alt="Location" />
             </Link>
             <Link to ="/" className="logo-link">
                 <img src="/datebite.png" alt="Logo"/>
             </Link>
             <Link to = "/settings" className="settings-link">
-                <img src="/datebitesetting.png" alt="Setting"/>
+                <img src="/datebitesetting-orange.png" alt="Setting"/>
             </Link>
             </div>
         </div>

@@ -24,19 +24,66 @@ export const MapComponent = () => {
     const autocompleteRef = useRef(null);
     const mapRef = useRef(null);
 
+
+
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("Saving places:", places);
+    e.preventDefault();
         try {
             
-            console.log("User ID:", userID);
-            console.log("Places to save:", places);
-            const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/location`, { places, userID });
+            const filtered = places.filter(p => p !== null && p.businessStatus === "OPERATIONAL");
+            console.log("UserID:", userID);
+            console.log("Filtered places:", filtered);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/location`, { places: filtered, userID });
             console.log(response.data);
         }catch (error) {
             console.error("Error saving places:", error);
-
         }
+
+
+        /*
+  if (!places.length) return;
+
+  const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  if (!apiKey) {
+    console.error("Google API key missing");
+    return;
+  }
+
+  // Helper to fetch details from REST API
+  const fetchDetailsREST = async (placeId) => {
+    try {
+      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=place_id,name,formatted_address,business_status,formatted_phone_number,regularOpeningHours,website,rating,price_level,photos,url&key=${apiKey}`;
+
+      const response = await axios.get(url);
+      if (response.data.status === "OK") {
+        return response.data.result;
+      } else {
+        console.warn(`Place details fetch failed for ${placeId}:`, response.data.status);
+        return null;
+      }
+    } catch (error) {
+      console.error("REST API fetch error for placeId:", placeId, error);
+      return null;
+    }
+  };
+
+  // Fetch details for all places in parallel
+  const allDetails = await Promise.all(places.map(p => fetchDetailsREST(p.place_id || p.id)));
+
+  const filtered = allDetails.filter(p => p !== null && p.business_status === "OPERATIONAL");
+
+  setPlacesDetails(filtered);
+
+  try {
+    console.log("Saving places:", filtered);
+    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/location`, {
+      places: filtered,
+      userID
+    });
+    console.log("Saved successfully:", response.data);
+  } catch (error) {
+    console.error("Error saving places:", error);
+  } */
     }
     
 
@@ -103,7 +150,7 @@ const getPlaces = useCallback(async () => {
       };
 
       const request = {
-        fields: ['displayName', 'location', 'businessStatus'],
+        fields: ['id', 'displayName', 'location', 'businessStatus'],
         locationRestriction: {
           center: tileCenter,
           radius: radius,
@@ -128,7 +175,7 @@ const getPlaces = useCallback(async () => {
       await new Promise(res => setTimeout(res, 200));
     }
 
-    setPlaces(Array.from(allPlacesMap.values()));
+        setPlaces(Array.from(allPlacesMap.values()));
   } catch (error) {
     console.error('Error with Places API:', error);
   } finally {
@@ -136,6 +183,11 @@ const getPlaces = useCallback(async () => {
   }
 }, [center]);
 
+useEffect(() => {
+    if (center) {
+        getPlaces();
+    }
+}, [center, getPlaces]);
 
     const onPlaceChanged = async () => {
         const place = autocompleteRef.current.getPlace();
@@ -152,13 +204,6 @@ const getPlaces = useCallback(async () => {
         getPlaces();
         
     }, [getPlaces]);
-
-
-    useEffect(() => {
-        if (center) {
-            getPlaces();
-        }
-    }, [center, getPlaces]);
 
     return (
         <div className="map-container">

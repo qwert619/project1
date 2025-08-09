@@ -5,7 +5,7 @@ import { useState, useEffect} from "react";
 export const SwipeGame = () => {
     const [swipeData, setSwipeData] = useState([]);
     const [currentPlace, setCurrentPlace] = useState(0);
-    const [loading, setLoading] = useState(true);
+    //const [loading, setLoading] = useState(true);
     const userID = window.localStorage.getItem("userID");
     useEffect(() => {
         const fetchSwipeData = async () => {
@@ -47,8 +47,10 @@ return (
         )}
         <div className="swipe-card-content">
           <h1 className="swipe-data-title">{swipeData[currentPlace]?.name}</h1>
+          <div className="swipe-buttons-container">
           <button className="swipe-data-no" onClick={() => handleSwipe("no")}>No</button>
           <button className="swipe-data-yes" onClick={() => handleSwipe("yes")}>Yes</button>
+          </div>
           {/* Add your swipe game logic here */}
         </div>
       </div>

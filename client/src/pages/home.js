@@ -5,6 +5,8 @@ import { SwipeGame } from "../components/swipegame";
 
 export const Home = () => {
     const [loggedIn, setLoggedIn] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const [inLobby, setInLobby] = useState(false);
     const navigate = useNavigate();
     const [guestusername, setGuestUsername] = useState("");
 
@@ -15,16 +17,24 @@ export const Home = () => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userID}`);
                 if (response.data.validUser) {
                     setLoggedIn(true);
+                    
                 } else {
                     window.localStorage.removeItem("username");
                     window.localStorage.removeItem("userID");
                 }
             } catch (error) {
+                console.error("Error fetching user:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
         if (userID !== null) {
             fetchValidUser()
+        } else {
+            setIsLoading(false);
         }
+
+
     }, []);
 
     const makeguest = async () => {
@@ -53,17 +63,33 @@ export const Home = () => {
 
   return (
     <div className="home">
-        {loggedIn ? (
+      {isLoading ? (
+        <p></p>
+      ) : loggedIn ? (
+        inLobby ? (
         <>
-        <SwipeGame />
+            <SwipeGame />
         </>
         ) : (
-            <>
-            <h1>Welcome</h1>
-        <input className="guest-username" type="text" placeholder="Enter your name" value={guestusername} onChange={(e) => setGuestUsername(e.target.value)} />
-        <button className="submit-username" onClick={handleSubmit}>submit</button>
+            <div className="lobby-section">
+                <input className="lobby-id" type="text" placeholder="Enter Lobby ID" />
+                <button className="make-lobby" onClick={() => setInLobby(true)}>Make Lobby</button>
+                <button className="join-lobby" onClick={() => setInLobby(true)}>Join Lobby</button>
+            </div>
+        )
+      ) : (
+        <>
+          <h1>Welcome</h1>
+          <input
+            className="guest-username"
+            type="text"
+            placeholder="Enter your name"
+            value={guestusername}
+            onChange={(e) => setGuestUsername(e.target.value)}
+          />
+          <button className="submit-username" onClick={handleSubmit}>submit</button>
         </>
-    )}
+      )}
     </div>
   )
 };

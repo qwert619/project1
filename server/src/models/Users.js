@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    guestusername: { type: String, required: true, unique: true },
+    guestusername: { type: String, required: true},
     guestplaces: [{
         place_id: { type: String },
         name: { type: String },
@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
         photos: { type: mongoose.Schema.Types.Mixed }, // can be array/object
         url: { type: String }
     }],
+    lobbyID: { type: String, unique: true }
 });
 
 export const userModel = mongoose.model("User", userSchema);

@@ -6,6 +6,7 @@ export const Settings = () => {
 
     const [loggedIn, setLoggedIn] = useState(false);
     const [guestusername, setGuestUsername] = useState("");
+    const [isloading, setIsLoading] = useState(true);
     const [currentUsername, setCurrentUsername] = useState("");
     const navigate = useNavigate();
 
@@ -22,12 +23,16 @@ export const Settings = () => {
                     window.localStorage.removeItem("userID");
                 }
             } catch (error) {
+                console.error("Error fetching user:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
         if (userID !== null) {
             fetchValidUser();
+        } else {
+            setIsLoading(false);
         }
-
 
     }, []);
 
@@ -54,7 +59,7 @@ export const Settings = () => {
 
   return (
       <div className="settings">
-          {loggedIn ? (
+          {isloading ? <p></p> : loggedIn ? (
           <>
               <h1 className="current-username">{`Current Username: ${currentUsername}`}</h1>
           <input className="guest-username" type="text" placeholder="Change username" value={guestusername} onChange={(e) => setGuestUsername(e.target.value)} />

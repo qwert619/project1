@@ -13,7 +13,7 @@ export const Navbar = () => {
                 <img src="/datebitemap-orange.png" alt="Location" />
             </Link>
             <Link to ="/" className="logo-link">
-                <img src="/datebite.png" alt="Logo"/>
+                <img src="/datebiteorange.png" alt="Logo"/>
             </Link>
             <Link to = "/settings" className="settings-link">
                 <img src="/datebitesetting-orange.png" alt="Setting"/>

@@ -1,5 +1,5 @@
 :root {
-  --primary-orange: #FF9722;
+  --primary-orange: #00FFFF;
   --navbar-black: black;
   --text-white: white;
   --hover-gray: #333;
@@ -43,6 +43,7 @@ body{
   border-top: 2px solid var(--primary-orange);
   z-index: 1000;
   padding: 20px 0;
+  height: 13vh;
 }
 
 .navbar-container {
@@ -483,4 +484,62 @@ body{
     width: 220px;
     padding: 10px;
   }
+}
+
+/* =========================
+   LOBBY SECTION
+   ========================= */
+
+.lobby-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin: 40px 0;
+  background: rgba(0,0,0,0.3);
+  padding: 32px 24px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lobby-id {
+  width: 260px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid var(--primary-orange);
+  font-size: 18px;
+  color: var(--navbar-black);
+  background: #fff;
+  margin-bottom: 12px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.lobby-id:focus {
+  outline: none;
+  border-color: #ffb056;
+  box-shadow: 0 0 0 3px rgba(255,151,34,0.2);
+}
+
+.make-lobby,
+.join-lobby {
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: none;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 8px;
+  transition: background 0.3s, transform 0.2s;
+  background: var(--primary-orange);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255,151,34,0.08);
+}
+
+.make-lobby:hover,
+.join-lobby:hover {
+  background: #e66a02;
+  transform: scale(1.05);
 }

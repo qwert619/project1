@@ -1,5 +1,5 @@
 :root {
-  --primary-orange: orange;
+  --primary-orange: #ff9320;
   --navbar-black: black;
   --text-white: white;
   --hover-gray: #333;
@@ -13,6 +13,14 @@
   font-family:   'Open Sans Condensed','Roboto Condensed' ,'Fjalla One','Oswald';
   font-stretch: condensed;
   font-weight: 10;
+}
+
+/* Prevent text selection everywhere */
+body, .App, * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
 }
 
 body{
@@ -242,6 +250,12 @@ body{
   justify-content: flex-end;
   align-items: center;
   background: #222; /* fallback */
+}
+
+.swipe-card,
+.swipe-card-content,
+.swipe-data-image {
+  cursor: pointer;
 }
 
 .swipe-data-image {

@@ -6,7 +6,6 @@ import { SwipeGame } from "../components/swipegame";
 export const Home = () => {
     const [loggedIn, setLoggedIn] = useState();
     const [isLoading, setIsLoading] = useState(true);
-    const [inLobby, setInLobby] = useState(false);
     const navigate = useNavigate();
     const [guestusername, setGuestUsername] = useState("");
 
@@ -55,9 +54,6 @@ export const Home = () => {
         
         e.preventDefault();
         // Handle form submission logic here
-        console.log("Form submitted");
-        const userID = window.localStorage.getItem("userID");
-        console.log("User ID:", userID);
         makeguest();
   };
 
@@ -66,17 +62,9 @@ export const Home = () => {
       {isLoading ? (
         <p></p>
       ) : loggedIn ? (
-        inLobby ? (
         <>
             <SwipeGame />
         </>
-        ) : (
-            <div className="lobby-section">
-                <input className="lobby-id" type="text" placeholder="Enter Lobby ID" />
-                <button className="make-lobby" onClick={() => setInLobby(true)}>Make Lobby</button>
-                <button className="join-lobby" onClick={() => setInLobby(true)}>Join Lobby</button>
-            </div>
-        )
       ) : (
         <>
           <h1>Welcome</h1>

@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
     socket.join(lobbyID);
     console.log(`Lobby ${lobbyID} created by ${socket.id}`);
 
-    socket.emit("lobbyCreated", { lobbyCode });
+    socket.emit("lobbyCreated", lobbyID);
   });
 
   socket.on("joinLobby", (lobbyID) => {
@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
     activeLobbies.get(lobbyID).members.push(socket.id);
     socket.join(lobbyID);
     console.log(`User ${socket.id} joined lobby: ${lobbyID}`);
-    io.to(lobbyID).emit("system", `${socket.id} joined the lobby`);
+    io.to(lobbyID).emit("system", activeLobbies.get(lobbyID).members, "A new user has joined the lobby");
   });
 
 

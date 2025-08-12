@@ -66,7 +66,7 @@ export const Home = () => {
             <SwipeGame />
         </>
       ) : (
-        <>
+        <div className="home-section">
           <h1>Welcome</h1>
           <input
             className="guest-username"
@@ -76,7 +76,7 @@ export const Home = () => {
             onChange={(e) => setGuestUsername(e.target.value)}
           />
           <button className="submit-username" onClick={handleSubmit}>submit</button>
-        </>
+        </div>
       )}
     </div>
   )

@@ -60,7 +60,7 @@ export const Settings = () => {
   return (
       <div className="settings">
           {isloading ? <p></p> : loggedIn ? (
-          <>
+          <div className="settings-section">
               <h1 className="current-username">{`Current Username: ${currentUsername}`}</h1>
           <input className="guest-username" type="text" placeholder="Change username" value={guestusername} onChange={(e) => setGuestUsername(e.target.value)} />
           <button className="submit-username" onClick={handleSubmit}>Save</button>
@@ -72,9 +72,11 @@ export const Settings = () => {
               setLoggedIn(false);
           }}>Logout</button>
           </div>
-          </>
+          </div>
           ) : (
+          <div className="settings-section">
           <button className="login-button" onClick={() => navigate("/")}>Create guest</button>
+          </div>
       )}
       </div>
   )

@@ -61,21 +61,29 @@ io.on("connection", (socket) => {
       members: [
         {
           member: socket.id,
+          memberName: socket.handshake.query.name,
           restaurants: restaurants.map(restaurant => ({ restaurant, yes: null })), // use null as undecided
         }
       ],
+      started: false,
       finished: false,
     });
 
     socket.join(lobbyID);
     console.log(`Lobby ${lobbyID} created by ${socket.id}`);
-
-    socket.emit("lobbyCreated", Array.from(activeLobbies.entries()));
+    console.log("Lobby members:", socket.handshake.query.name);
+    socket.emit("lobbyCreated", activeLobbies.get(lobbyID).members.map(m => m.memberName));
   });
 
   socket.on("joinLobby", (lobbyID) => {
     if (!activeLobbies.has(lobbyID)) {
       socket.emit("lobbyError", "Lobby does not exist");
+      return;
+    } else if (activeLobbies.get(lobbyID).started === true) {
+      socket.emit("lobbyError", "Lobby has already started");
+      return;
+    } else if (activeLobbies.get(lobbyID).members.length >= 4) {
+      socket.emit("lobbyError", "Lobby is full");
       return;
     }
 
@@ -85,13 +93,21 @@ io.on("connection", (socket) => {
       const copyofRestaurants = lobby.members[0]?.restaurants || [];
       // Clone restaurants and reset votes to null
       const updatemember = copyofRestaurants.map(item => ({ restaurant: item.restaurant, yes: null }));
-      lobby.members.push({ member: socket.id, restaurants: updatemember });
+      lobby.members.push({ member: socket.id, memberName: socket.handshake.query.name, restaurants: updatemember });
     }
 
     socket.join(lobbyID);
     console.log(`User ${socket.id} joined lobby: ${lobbyID}`);
 
-    io.to(lobbyID).emit("system", lobby.members[0]?.restaurants.map(item => item.restaurant));
+    io.to(lobbyID).emit("system", { restaurants: lobby.members[0]?.restaurants.map(item => item.restaurant), members: lobby.members.map(m => m.memberName) });
+  });
+
+  socket.on("startGame", (lobbyID) => {
+    const lobby = activeLobbies.get(lobbyID);
+    if (!lobby) return;
+    lobby.started = true;
+
+    io.to(lobbyID).emit("startGame", { restaurants: lobby.members[0]?.restaurants.map(item => item.restaurant), members: lobby.members.map(m => m.memberName) });
   });
 
   socket.on("swipe", (yes, restaurant, lobbyID) => {

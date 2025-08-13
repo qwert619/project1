@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
+import Card from "./Card";
 
 const socket = io("http://localhost:3002", {
   query: {
@@ -17,7 +18,6 @@ export const SwipeGame = () => {
   const [waiting, setWaiting] = useState(false);
   const [lobbyPlayers, setLobbyPlayers] = useState([]);
   const [hosting, setHosting] = useState(false);
-  const [drag, setDrag] = useState({ x: 0, y: 0, isDragging: false });
   const cardRef = useRef(null);
 
   const userID = localStorage.getItem("userID");
@@ -90,46 +90,12 @@ export const SwipeGame = () => {
     socket.emit("startGame", lobbyID);
   };
 
-  // Drag/swipe logic
-  const handleDragStart = (e) => {
-    setDrag({
-      ...drag,
-      isDragging: true,
-      startX: e.type === "touchstart" ? e.touches[0].clientX : e.clientX,
-      startY: e.type === "touchstart" ? e.touches[0].clientY : e.clientY,
-    });
-  };
-
-  const handleDragMove = (e) => {
-    if (!drag.isDragging) return;
-    const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
-    const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
-    setDrag({
-      ...drag,
-      x: clientX - drag.startX,
-      y: clientY - drag.startY,
-    });
-  };
-
-  const handleDragEnd = () => {
-    if (!drag.isDragging) return;
-    let direction = "";
-    if (drag.x > 120) direction = "yes";
-    else if (drag.x < -120) direction = "no";
-
-    if (direction) {
-      handleSwipe(direction);
-    } else {
-      setDrag({ x: 0, y: 0, isDragging: false });
-    }
-  };
-
+  // Called by Card when a swipe is completed
   const handleSwipe = (direction) => {
     if (swipeData.length === 0) return;
     const yes = direction === "yes";
     const restaurant = swipeData[currentPlace];
     socket.emit("swipe", yes, restaurant, lobbyID);
-    setDrag({ x: 0, y: 0, isDragging: false });
     setCurrentPlace((prev) => (prev + 1) % swipeData.length);
   };
 
@@ -140,7 +106,6 @@ export const SwipeGame = () => {
     setWinner("");
     setWaiting(false);
     setHosting(false);
-    setDrag({ x: 0, y: 0, isDragging: false });
   };
 
   if (outLobby) {
@@ -183,7 +148,6 @@ export const SwipeGame = () => {
         <div className="swipe-stack">
           <div
             className="swipe-card liked"
-            style={{ transform: "translate(-50%, -50%)" }}
           >
             {winner.restaurant?.photos?.[0]?.photo_reference && (
               <img
@@ -202,57 +166,34 @@ export const SwipeGame = () => {
     );
   }
 
-  // Card style for drag/swipe
-  const cardStyle = {
-    transform: `translate(-50%, -50%) translate(${drag.x}px, ${drag.y}px) rotate(${drag.x / 10}deg)`,
-    transition: drag.isDragging ? "none" : "transform 0.3s",
-    zIndex: 2,
-  };
-
-  // Card feedback class
-  let feedbackClass = "";
-  if (drag.x > 80) feedbackClass = "liked";
-  else if (drag.x < -80) feedbackClass = "disliked";
-
   return (
     <div className="swipe-game">
       <div className="swipe-stack">
+        {/* Top card (current) */}
         {swipeData[currentPlace] && (
-          <div
-            className={`swipe-card ${feedbackClass}`}
-            ref={cardRef}
-            style={cardStyle}
-            onMouseDown={handleDragStart}
-            onMouseMove={handleDragMove}
-            onMouseUp={handleDragEnd}
-            onMouseLeave={handleDragEnd}
-            onTouchStart={handleDragStart}
-            onTouchMove={handleDragMove}
-            onTouchEnd={handleDragEnd}
-          >
-            {swipeData[currentPlace]?.photos?.[0]?.photo_reference && (
-              <img
-                className="swipe-data-image"
-                src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${swipeData[currentPlace].photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`}
-                alt={swipeData[currentPlace]?.name}
-              />
-            )}
-            <div className="swipe-card-content">
-              <h1 className="swipe-data-title">{swipeData[currentPlace]?.name}</h1>
-              <div className="swipe-progress">
-                {swipeData.length > 0 && (
-                  <span>
-                    {currentPlace + 1} / {swipeData.length}
-                  </span>
-                )}
-              </div>
-              <div style={{ marginTop: "10px", color: "#ffb056", fontWeight: "bold" }}>
-                <span>Swipe right for Yes, left for No</span>
-              </div>
-            </div>
-          </div>
+          <Card
+            key={swipeData[currentPlace].place_id}
+            restaurant={swipeData[currentPlace]}
+            progress={`${currentPlace + 1} / ${swipeData.length}`}
+            onSwipe={handleSwipe}
+            cardRef={cardRef}
+            isBackground={false}
+          />
+        )}
+        
+        {/* Second card (behind) */}
+        {swipeData[currentPlace + 1] && (
+          <Card
+            key={swipeData[currentPlace + 1].place_id}
+            restaurant={swipeData[currentPlace + 1]}
+            progress={`${currentPlace + 2} / ${swipeData.length}`}
+            onSwipe={() => {}} // No swipe for background card
+            cardRef={null}
+            isBackground={true}
+          />
         )}
       </div>
     </div>
   );
+
 };
